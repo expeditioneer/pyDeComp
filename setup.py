@@ -17,7 +17,7 @@ setup(
     name='pyDeComp',
     version=__version__,
     description="A Python library for subprocessing various compression "
-        "and decompression routines.  Including generating contents listings",
+        "and decompression routines. Including generating contents listings",
     author='Brian Dolbec',
     author_email='dolsen@gentoo.org',
     url="https://github.com/dol-sen/pyDeComp",
