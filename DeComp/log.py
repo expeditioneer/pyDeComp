@@ -2,7 +2,7 @@
 
 """
 Logging module for the Decomp libraries
-This module can be overriden by the consumer application
+This module can be overridden by the consumer application
 """
 
 import errno
@@ -19,13 +19,11 @@ info = logger.info
 warning = logger.warning
 
 
-def set_logger(logpath='', level=None):
-    """Logger intialization function
+def set_logger(logpath: str = '', level: int = None) -> None:
+    """Logger initialization function
 
     :param logpath: optional filepath to save log outpput to
-    :type logpath: string
     :param level: logging level to set the file logger to
-    :type level: integer
     """
     logger.setLevel(logging.INFO)
     # create formatter and add it to the handlers

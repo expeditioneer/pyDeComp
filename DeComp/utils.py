@@ -13,25 +13,21 @@ from DeComp import log
 BASH_CMD = "/bin/bash"
 
 
-def _is_available(self, available_binaries):
+def _is_available(self, available_binaries: set) -> bool:
     """Private function for the named tuple classes
 
     :param available_binaries: the confirmed installed binaries
-    :type: available_binaries: set
-    :returns: boolean
     """
     return self.binaries.issubset(available_binaries)
 
 
-def create_classes(definitions, fields):
+def create_classes(definitions: dict, fields: list) -> dict:
     """This function dynamically creates the namedtuple classes which are
     used for the information they contain in a consistent manner.
 
     :param definitions: (de)compressor definitions
         see DEFINITION_FIELDS defined in this library.
-    :type definitions: dictionary
     :param fields: list of the field names to create
-    :type fields: list
     :returns: class_map: dictionary of key: namedtuple class instance
     """
     class_map = {}
@@ -47,18 +43,13 @@ def create_classes(definitions, fields):
     return class_map
 
 
-def subcmd(command, exc="", env=None, debug=False):
+def subcmd(command: str, exc: str = "", env: dict = None, debug: bool | None = False) -> bool:
     """General purpose function to run a command in a subprocess
 
     :param command: command string to run
-    :type command: string
     :param exc: command name being run (used for the log)
-    :type exc: string
     :param env: the environment to run the command in
-    :type env: dictionary
     :param debug: optional default: False
-    :type debug: boolean
-    :returns: boolean
     """
     env = env or {}
     sys.stdout.flush()
@@ -78,11 +69,10 @@ def subcmd(command, exc="", env=None, debug=False):
     return True
 
 
-def check_available(commands):
+def check_available(commands: list) -> set[str]:
     """Checks for the available binaries
 
     :param commands: the binaries to check for their existence
-    :type commands: list
     :returns: set of the installed binaries available
     """
     cmd = ["which"]

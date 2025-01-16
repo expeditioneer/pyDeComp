@@ -4,7 +4,7 @@ contents.py
 Utility class to hold and handle all possible contents
 listing of compressed files using native linux utilities.
 
-If you have other contents defintions,
+If you have other contents definitions,
 please send them along for inclusion in the main repo.
 
 Maintained in full by:
@@ -14,6 +14,7 @@ Maintained in full by:
 
 from __future__ import print_function
 
+import logging
 import os
 from subprocess import Popen, PIPE
 
@@ -34,8 +35,8 @@ class ContentsMap(object):
     # use ContentsMap.fields for the value legend
     fields = list(DEFINITION_FIELDS)
 
-    def __init__(self, definitions=None, env=None, default_mode=None,
-                 separator=EXTENSION_SEPARATOR, search_order=None, logger=None,
+    def __init__(self, definitions: dict = None, env: dict = None, default_mode: str = None,
+                 separator: str = EXTENSION_SEPARATOR, search_order: list[str] = None, logger: logging.Logger | None = None,
                  comp_prog=COMPRESSOR_PROGRAM_OPTIONS['linux'],
                  decomp_opt=DECOMPRESSOR_PROGRAM_OPTIONS['linux'],
                  list_xattrs_opt=LIST_XATTRS_OPTIONS['linux']):
@@ -43,18 +44,12 @@ class ContentsMap(object):
 
         :param definitions: dictionary of
             Key:[function, cmd, cmd_args, Print/id string, extensions]
-        :type definitions: dictionary
         :param env: environment to pass to the subprocess
-        :type env: dictionary
         :param default_mode: one of the defintions keys
-        :type default_mode: string
         :param separator: filename extension separator
-        :type separator: string
         :param search_order: optional mode search order
-        :type search_order: list of strings
         :param logger: optional logging module instance,
                        default: pyDecomp logging namespace instance
-        :type logger: logging
         """
         if definitions is None:
             definitions = {}
@@ -79,17 +74,13 @@ class ContentsMap(object):
             binaries.update(self._map[mode].binaries)
         self.available = check_available(binaries)
 
-    def contents(self, source, destination, mode="auto", verbose=False):
+    def contents(self, source: str, destination: str, mode: str = "auto", verbose: bool = False) -> str:
         """Generate the contens list of the archive
 
         :param source: optional path to the directory
-        :type source: string
         :param destination: optional path to the directory
-        :type destination: string
         :param mode: optional mode to use to (de)compress with
-        :type mode: string
         :param verbose: toggle
-        :type verbose: boolean
         :returns: string, list of the contents
         """
         if mode in ['auto']:
@@ -104,22 +95,20 @@ class ContentsMap(object):
                     self._map[mode].cmd, self._map[mode].args, verbose)
 
     @staticmethod
-    def get_extension(source):
+    def get_extension(source: str) -> str:
         """Extracts the file extension string from the source file
 
         :param source: path to the archive
-        :type source: string
         :returns: string: file type extension of the source file
         """
         return os.path.splitext(source)[1]
 
-    def determine_mode(self, source):
+    def determine_mode(self, source: str) -> str:
         """Uses the search_order spec parameter and compares the contents
         file extension strings with the source file and returns the mode to
         use for contents generation.
 
         :param source: file path of the file to determine
-        :type source: string
         :returns: string: the contents generation mode to use on the source file
         """
         self.logger.debug("ContentsMap: determine_mode(), source = %s", source)
@@ -139,19 +128,14 @@ class ContentsMap(object):
                               "find a mode to use for: %s", source)
         return result
 
-    def _common(self, source, destination, cmd, args, verbose):
+    def _common(self, source: str, destination: str, cmd: str, args: list, verbose: bool) -> str:
         """General purpose controller to generate the contents listing
 
         :param source: optional path to the directory
-        :type source: string
         :param destination: optional path to the directory
-        :type destination: string
         :param cmd: definition command to use to generate the contents with
-        :type cmd: string
-        :param args: optioanl command arguments
-        :type args: list
+        :param args: optional command arguments
         :param verbose: toggle
-        :type verbose: boolean
         :returns: string, list of the contents
         """
         _cmd = [cmd]
@@ -178,19 +162,14 @@ class ContentsMap(object):
         return result
 
     @staticmethod
-    def _mountable(_source, _destination, _cmd, _args, _verbose):
+    def _mountable(_source: str, _destination: str, _cmd: str, _args: list, _verbose: bool) -> str:
         """Control module to mount/umount a mountable filesystem
 
         :param source: optional path to the directory
-        :type source: string
         :param destination: optional path to the directory
-        :type destination: string
         :param cmd: definition command to use to generate the contents with
-        :type cmd: string
-        :param args: optioanl command arguments
-        :type args: list
+        :param args: optional command arguments
         :param verbose: toggle
-        :type verbose: boolean
         :returns: string, list of the contents
         """
         return 'NOT IMPLEMENTED!!!!!!'

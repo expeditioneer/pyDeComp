@@ -12,7 +12,7 @@ Maintained in full by:
     Brian Dolbec <dolsen@gentoo.org>
 
 """
-
+import logging
 import os
 
 from DeComp import log
@@ -29,10 +29,10 @@ class CompressMap(object):
     # fields: list of ordered field names for the (de)compression functions
     fields = list(DEFINITION_FIELDS)
 
-    def __init__(self, definitions=None, env=None, default_mode=None,
-                 separator=EXTENSION_SEPARATOR, search_order=None, logger=None,
-                 comp_prog=COMPRESSOR_PROGRAM_OPTIONS[DEFAULT_TAR],
-                 decomp_opt=DECOMPRESSOR_PROGRAM_OPTIONS[DEFAULT_TAR]
+    def __init__(self, definitions=None, env: dict = None, default_mode: str = None,
+                 separator: str = EXTENSION_SEPARATOR, search_order: list[str] = None, logger: logging.Logger = None,
+                 comp_prog: str = COMPRESSOR_PROGRAM_OPTIONS[DEFAULT_TAR],
+                 decomp_opt: str = DECOMPRESSOR_PROGRAM_OPTIONS[DEFAULT_TAR]
                  ):
         """Class init
 
@@ -40,21 +40,14 @@ class CompressMap(object):
             Key:[function, cmd, cmd_args, Print/id string, extensions]
         :type definitions: dictionary
         :param env: environment to pass to the cmd subprocess
-        :type env: dictionary
         :param default_mode: one of the definitions keys
-        :type default_mode: string
         :param separator: filename extension separator
-        :type separator: string
         :param search_order: optional mode search order
-        :type search_order: list of strings
         :param logger: optional logging module instance,
                        default: pyDecomp logging namespace instance
-        :type logger: logging
         :param comp_prog: the tar option string to use for the commpressor program
                           bsd's tar is different that linux's tar default: '-I'
-        :type comp_prog: string
         :param decomp_opt: external decompressor module option
-        :type decomp_opt: string
         """
         if definitions is None:
             definitions = {}
@@ -90,26 +83,20 @@ class CompressMap(object):
             binaries.update(self._map[mode].binaries)
         self.available = check_available(binaries)
 
-    def _compress(self, infodict=None, filename='', source=None,
-                  basedir='.', mode=None, auto_extension=False,
-                  arch=None, other_options=None):
+    def _compress(self, infodict: dict = None, filename: str = '', source: str = None,
+                  basedir='.', mode: str = None, auto_extension: bool = False,
+                  arch=None, other_options=None) -> bool:
         """Compression function
 
         :param infodict: optional dictionary of the next 4 parameters.
-        :type infodict: dictionary
         :param filename: optional name of the file to make
-        :type filename: string
         :param source: optional path to the directory
-        :type source: string
         :param destination: optional path to the directory
         :type destination: string
         :param mode: optional mode to use to (de)compress with
-        :type mode: string
         :param auto_extension: optional, enables or disables
             adding the normaL file extension defined by the mode used.
             defaults to False
-        :type auto_extension: boolean
-        :returns: boolean
         """
         if not infodict:
             infodict = self.create_infodict(source, None, basedir, filename,
@@ -130,19 +117,14 @@ class CompressMap(object):
                           infodict['mode'])
         return self._run(infodict)
 
-    def _extract(self, infodict=None, source=None, destination=None,
-                 mode=None, other_options=None):
+    def _extract(self, infodict: dict = None, source: str = None, destination: str = None,
+                 mode: str = None, other_options=None) -> bool:
         """De-compression function
 
         :param infodict: optional dictionary of the next 3 parameters.
-        :type infodict: dictionary
         :param source: optional path to the directory
-        :type source: string
         :param destination: optional path to the directory
-        :type destination: string
         :param mode: optional mode to use to (de)compress with
-        :type mode: string
-        :returns: boolean
         """
         if self.loaded_type[0] not in ["Decompression"]:
             return False
@@ -168,12 +150,10 @@ class CompressMap(object):
                           infodict['mode'])
         return self._run(infodict)
 
-    def _run(self, infodict):
+    def _run(self, infodict: dict) -> bool:
         """Internal function that runs the designated function
 
         :param infodict: optional dictionary of the next 3 parameters.
-        :type infodict: dictionary
-        :returns: boolean
         """
         if not self.is_supported(infodict['mode']):
             self.logger.error("mode: %s is not supported in the current %s "
@@ -207,22 +187,20 @@ class CompressMap(object):
         return success
 
     @staticmethod
-    def get_extension(source):
+    def get_extension(source: str) -> str:
         """Extracts the file extension string from the source file
 
         :param source: path to the file
-        :type source: string
         :returns: string: file type extension of the source file
         """
         return os.path.splitext(source)[1]
 
-    def determine_mode(self, source):
+    def determine_mode(self, source: str) -> str:
         """Uses the decompressor_search_order spec parameter and
         compares the decompressor's file extension strings
         with the source file and returns the mode to use for decompression.
 
         :param source: file path of the file to determine
-        :type source: string
         :returns: string: the decompressor mode to use on the source file
         """
         self.logger.info("COMPRESS: determine_mode(), source = %s", source)
@@ -243,19 +221,14 @@ class CompressMap(object):
                                 "mode to use for: %s", source)
         return result
 
-    def rsync(self, infodict=None, source=None, destination=None,
-              mode=None):
-        """Convienience function. Performs an rsync transfer
+    def rsync(self, infodict: dict = None, source: str = None, destination: str = None,
+              mode: str = None) -> bool:
+        """Convienience function. Performs a rsync transfer
 
         :param infodict: optional dictionary of the next 3 parameters.
-        :type infodict: dictionary
         :param source: optional path to the directory
-        :type source: string
         :param destination: optional path to the directory
-        :type destination: string
         :param mode: optional mode to use to (de)compress with
-        :type mode: string
-        :returns: boolean
         """
         if not infodict:
             if not mode:
@@ -263,13 +236,11 @@ class CompressMap(object):
             infodict = self.create_infodict(source, destination, mode=mode)
         return self._common(infodict)
 
-    def _common(self, infodict):
+    def _common(self, infodict: dict) -> bool:
         """Internal function.  Performs commonly supported
         compression or decompression commands.
 
         :param infodict: dict as returned by this class's create_infodict()
-        :type infodict: dictionary
-        :returns: boolean
         """
         if not infodict['mode'] or not self.is_supported(infodict['mode']):
             self.logger.error("ERROR: CompressMap; %s mode: %s not correctly "
@@ -296,36 +267,27 @@ class CompressMap(object):
 
         self.logger.debug("COMPRESS: _common(); command args: %s", args)
         # now run the (de)compressor command in a subprocess
-        # return it's success/fail return value
+        # return its success/fail return value
         return subcmd(args, cmdlist.id, env=self.env)
 
-    def create_infodict(self, source, destination=None, basedir=None,
-                        filename='', mode=None, auto_extension=False,
-                        arch=None, other_options=None):
+    def create_infodict(self, source: str, destination: str = None, basedir: str = None,
+                        filename: str = '', mode: str = None, auto_extension: bool = False,
+                        arch: str = None, other_options: str | list = None) -> dict:
         """Puts the source and destination paths into a dictionary
-        for use in string substitution in the defintions
+        for use in string substitution in the definitions
         %(source) and %(destination) fields embedded into the commands
 
         :param source: path to the directory
-        :type source: string
         :param destination: optional path to the directory
-        :type destination: string
         :param basedir: optional path to a directory
-        :type basedir: string
         :param filename: optional name of the file
-        :type filename: string
         :param mode: optional mode to use to (de)compress with
-        :type mode: string
         :param auto_extension: optional, enables or disables
             adding the normaL file extension defined by the mode used.
             defaults to False
-        :type auto_extension: boolean
         :param arch: optional arch to specify to the compressor
-        :type arch: string
         :param other_options: other optional args to pass if the definition
                               supports that attribute
-        :type other_options, string or list
-        :returns: dictionary
         """
         return {
             'source': source,
@@ -340,33 +302,28 @@ class CompressMap(object):
             'decomp_opt': self.decomp_opt,
         }
 
-    def is_supported(self, mode):
+    def is_supported(self, mode: str) -> bool:
         """Truth function to test the mode desired is supported
         in the definitions loaded
 
         :param mode: string, mode to use to (de)compress with
-        :type mode: string
-        :returns: boolean
         """
         return mode in list(self._map)
 
     @property
     def available_modes(self):
-        """Convienence function to return the available modes
+        """Convenience function to return the available modes
 
         :returns: list of modes supported
         """
         return list(self._map)
 
-    def extension(self, mode, all_extensions=False):
+    def extension(self, mode: str, all_extensions: bool = False) -> str:
         """Returns the predetermined extension auto-ext added
         to the filename for compression.
 
         :param mode: the compression mode
-        :type mode: string
         :param all_extensions: optional, default: False
-        :type all_extensions: boolean
-        :returns: string
         """
         if self.is_supported(mode):
             if all_extensions:
@@ -375,13 +332,11 @@ class CompressMap(object):
                 return self._map[mode].extensions[0]
         return ''
 
-    def _sqfs(self, infodict):
-        """Internal function.  Performs commonly supported
+    def _sqfs(self, infodict: dict) -> bool:
+        """Internal function. Performs commonly supported
         compression or decompression commands.
 
         :param infodict: dict as returned by this class's create_infodict()
-        :type infodict: dictionary
-        :returns: boolean
         """
 
         if not infodict['mode'] or not self.is_supported(infodict['mode']):
@@ -409,10 +364,10 @@ class CompressMap(object):
         args = ' '.join([cmdlist.cmd, opts])
 
         # now run the (de)compressor command in a subprocess
-        # return it's success/fail return value
+        # return its success/fail return value
         return subcmd(args, cmdlist.id, env=self.env)
 
-    def search_order_extensions(self, search_order):
+    def search_order_extensions(self, search_order: list[str]) -> list:
         """Returns the ordered extension list determined by
         the search order for the (de)compression.
 
@@ -432,7 +387,7 @@ class CompressMap(object):
 
     @staticmethod
     def _sub_other_options(args, cmdinfo):
-        '''Substitute any other_options in the '''
+        """Substitute any other_options in the """
         cmdargs = args[:]
         # replace the other_options placeholder
         if 'other_options' in cmdargs:

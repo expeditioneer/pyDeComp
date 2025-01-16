@@ -5,7 +5,7 @@ Definitions file to hold and handle all possible compression,
 decompression and contents definitions dictionaries for native
 linux utilities.  They are used by the compress.py and contents.py classes.
 
-If you have other contents defintions,
+If you have other contents definitions,
 please send them along for inclusion in the main repo.
 
 Maintained in full by:
