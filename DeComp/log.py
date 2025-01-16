@@ -47,5 +47,5 @@ def set_logger(logpath='', level=None):
     # create console handler with a higher log level
     Console_handler = logging.StreamHandler()
     Console_handler.setLevel(logging.ERROR)
-    #Console_handler.setFormatter(formatter)
+    # Console_handler.setFormatter(formatter)
     logger.addHandler(Console_handler)

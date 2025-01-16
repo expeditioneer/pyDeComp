@@ -24,7 +24,7 @@ DEFINITION_FIELDS = OrderedDict([
     ("id", str),
     ("extensions", list),
     ("binaries", set),
-    ]
+]
 )
 
 DEFINITION_HELP = """
@@ -66,25 +66,25 @@ values during run time:
 """
 
 XATTRS_OPTIONS = {"linux": [
-                                "--xattrs",
-                                "--xattrs-include=security.capability",
-                                "--xattrs-include=user.pax.flags"
-                           ],
-                  "bsd": [],
-                  "None": [],
-                 }
+    "--xattrs",
+    "--xattrs-include=security.capability",
+    "--xattrs-include=user.pax.flags"
+],
+    "bsd": [],
+    "None": [],
+}
 
 COMPRESSOR_PROGRAM_OPTIONS = {"linux": "-I",
                               "bsd": "--use-compress-program",
-                             }
+                              }
 
 DECOMPRESSOR_PROGRAM_OPTIONS = {"linux": "",
                                 "bsd": "-d",
-                               }
+                                }
 
 LIST_XATTRS_OPTIONS = {"linux": "--xattrs",
                        "bsd": "",
-                      }
+                       }
 
 if os.uname()[0] in ["Linux", "linux"]:
     DEFAULT_TAR = 'linux'
@@ -94,250 +94,248 @@ else:
 COMPRESS_DEFINITIONS = {
     "Type": ["Compression", "Compression definitions loaded"],
     "rsync": [
-                "rsync", "rsync",
-                ["-a", "--delete", "%(source)s", "%(destination)s"],
-                "RSYNC", None, {"rsync"},
-             ],
+        "rsync", "rsync",
+        ["-a", "--delete", "%(source)s", "%(destination)s"],
+        "RSYNC", None, {"rsync"},
+    ],
     "lbzip2": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "lbzip2", "-cf",
-                    "%(filename)s", "-C", "%(basedir)s", "%(source)s"
-                ],
-                "LBZIP2", ["tar.bz2"], {"tar", "lbzip2"},
-              ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "lbzip2", "-cf",
+            "%(filename)s", "-C", "%(basedir)s", "%(source)s"
+        ],
+        "LBZIP2", ["tar.bz2"], {"tar", "lbzip2"},
+    ],
     "bzip2": [
-                "_common", "tar",
-                [
-                    "other_options", "-cpjf", "%(filename)s", "-C",
-                    "%(basedir)s", "%(source)s"
-                ],
-                "BZIP2", ["tar.bz2"], {"tar", "bzip2"},
-             ],
+        "_common", "tar",
+        [
+            "other_options", "-cpjf", "%(filename)s", "-C",
+            "%(basedir)s", "%(source)s"
+        ],
+        "BZIP2", ["tar.bz2"], {"tar", "bzip2"},
+    ],
     "lzip": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "lzip", "-cf",
-                    "%(filename)s", "-C", "%(basedir)s", "%(source)s"
-                ],
-                "LZIP", ["tar.lzip"], {"tar", "lzip"},
-              ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "lzip", "-cf",
+            "%(filename)s", "-C", "%(basedir)s", "%(source)s"
+        ],
+        "LZIP", ["tar.lzip"], {"tar", "lzip"},
+    ],
     "lzma": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "lzma", "-cf",
-                    "%(filename)s", "-C", "%(basedir)s", "%(source)s"
-                ],
-                "LZ", ["tar.lzma"], {"tar", "lzma"},
-              ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "lzma", "-cf",
+            "%(filename)s", "-C", "%(basedir)s", "%(source)s"
+        ],
+        "LZ", ["tar.lzma"], {"tar", "lzma"},
+    ],
     "lzop": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "lzop", "-cf",
-                    "%(filename)s", "-C", "%(basedir)s", "%(source)s"
-                ],
-                "LZOP", ["tar.lzop"], {"tar", "lzop"},
-              ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "lzop", "-cf",
+            "%(filename)s", "-C", "%(basedir)s", "%(source)s"
+        ],
+        "LZOP", ["tar.lzop"], {"tar", "lzop"},
+    ],
     "tar": [
-                "_common", "tar",
-                [
-                    "other_options", "-cpf", "%(filename)s", "-C",
-                    "%(basedir)s", "%(source)s"
-                ],
-                "TAR", ["tar"], {"tar"},
-           ],
+        "_common", "tar",
+        [
+            "other_options", "-cpf", "%(filename)s", "-C",
+            "%(basedir)s", "%(source)s"
+        ],
+        "TAR", ["tar"], {"tar"},
+    ],
     "xz": [
-            "_common", "tar",
-            [
-                "other_options", "-cpJf", "%(filename)s", "-C",
-                "%(basedir)s", "%(source)s"
-            ],
-            "XZ", ["tar.xz"], {"tar"},
-          ],
+        "_common", "tar",
+        [
+            "other_options", "-cpJf", "%(filename)s", "-C",
+            "%(basedir)s", "%(source)s"
+        ],
+        "XZ", ["tar.xz"], {"tar"},
+    ],
     "pixz": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "'pixz -t'", "-cpf",
-                    "%(filename)s", "-C", "%(basedir)s", "%(source)s"
-                ],
-                "PIXZ", ["tar.xz", "tpxz", "xz"], {"tar", "pixz"},
-            ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "'pixz -t'", "-cpf",
+            "%(filename)s", "-C", "%(basedir)s", "%(source)s"
+        ],
+        "PIXZ", ["tar.xz", "tpxz", "xz"], {"tar", "pixz"},
+    ],
     "pixz_i": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "pixz", "-cpf",
-                    "%(filename)s", "-C", "%(basedir)s", "%(source)s"
-                ],
-                "PIXZ", ["tar.xz", "tpxz", "xz"], {"tar", "pixz"},
-            ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "pixz", "-cpf",
+            "%(filename)s", "-C", "%(basedir)s", "%(source)s"
+        ],
+        "PIXZ", ["tar.xz", "tpxz", "xz"], {"tar", "pixz"},
+    ],
     "zstd": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "zstd", "-cpf",
-                    "%(filename)s", "-C", "%(basedir)s", "%(source)s"
-                ],
-                "ZSTD", ["tar.zstd", "tar.zst", "tzst", "zst"], {"tar", "zstd"},
-            ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "zstd", "-cpf",
+            "%(filename)s", "-C", "%(basedir)s", "%(source)s"
+        ],
+        "ZSTD", ["tar.zstd", "tar.zst", "tzst", "zst"], {"tar", "zstd"},
+    ],
     "pzstd": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "pzstd", "-cpf",
-                    "%(filename)s", "-C", "%(basedir)s", "%(source)s"
-                ],
-                "PZSTD", ["tar.pzstd", "tar.zstd", "tar.zst", "tzst", "zst"], {"tar", "pzstd"},
-            ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "pzstd", "-cpf",
+            "%(filename)s", "-C", "%(basedir)s", "%(source)s"
+        ],
+        "PZSTD", ["tar.pzstd", "tar.zstd", "tar.zst", "tzst", "zst"], {"tar", "pzstd"},
+    ],
     "gzip": [
-                "_common", "tar",
-                [
-                    "other_options", "-cpzf", "%(filename)s", "-C",
-                    "%(basedir)s", "%(source)s"
-                ],
-                "GZIP", ["tar.gz"], {"tar"},
-            ],
+        "_common", "tar",
+        [
+            "other_options", "-cpzf", "%(filename)s", "-C",
+            "%(basedir)s", "%(source)s"
+        ],
+        "GZIP", ["tar.gz"], {"tar"},
+    ],
     "squashfs_xz": [
-                    "_sqfs", "mksquashfs",
-                    [
-                        "%(basedir)s/%(source)s", "%(filename)s", "-comp", "xz",
-                        "-Xbcj", "%(arch)s", "-b", "1M", "other_options"
-                    ],
-                    "SQUASHFS", ["squashfs", "sfs"], {"mksquashfs"},
-                ],
+        "_sqfs", "mksquashfs",
+        [
+            "%(basedir)s/%(source)s", "%(filename)s", "-comp", "xz",
+            "-Xbcj", "%(arch)s", "-b", "1M", "other_options"
+        ],
+        "SQUASHFS", ["squashfs", "sfs"], {"mksquashfs"},
+    ],
     "squashfs_gzip": [
-                    "_sqfs", "mksquashfs",
-                    [
-                        "%(basedir)s/%(source)s", "%(filename)s", "-comp", "gzip",
-                        "-b", "1M", "other_options"
-                    ],
-                    "SQUASHFS", ["squashfs", "sfs"], {"mksquashfs"},
-                ],
+        "_sqfs", "mksquashfs",
+        [
+            "%(basedir)s/%(source)s", "%(filename)s", "-comp", "gzip",
+            "-b", "1M", "other_options"
+        ],
+        "SQUASHFS", ["squashfs", "sfs"], {"mksquashfs"},
+    ],
     "squashfs_zstd": [
-                    "_sqfs", "mksquashfs",
-                    [
-                        "%(basedir)s/%(source)s", "%(filename)s", "-comp", "zstd",
-                        "-Xcompression-level", "2", "-b", "1M", "other_options"
-                    ],
-                    "SQUASHFS", ["squashfs", "sfs"], {"mksquashfs"},
-                ],
+        "_sqfs", "mksquashfs",
+        [
+            "%(basedir)s/%(source)s", "%(filename)s", "-comp", "zstd",
+            "-Xcompression-level", "2", "-b", "1M", "other_options"
+        ],
+        "SQUASHFS", ["squashfs", "sfs"], {"mksquashfs"},
+    ],
     "squashfs_pzstd": [
-                    "_sqfs", "mksquashfs",
-                    [
-                        "%(basedir)s/%(source)s", "%(filename)s", "-comp", "pzstd",
-                        "-Xcompression-level", "2", "-b", "1M", "other_options"
-                    ],
-                    "SQUASHFS", ["squashfs", "sfs"], {"mksquashfs"},
-                ],
-    }
-
+        "_sqfs", "mksquashfs",
+        [
+            "%(basedir)s/%(source)s", "%(filename)s", "-comp", "pzstd",
+            "-Xcompression-level", "2", "-b", "1M", "other_options"
+        ],
+        "SQUASHFS", ["squashfs", "sfs"], {"mksquashfs"},
+    ],
+}
 
 DECOMPRESS_DEFINITIONS = {
-    "Type":     ["Decompression", "Decompression definitions loaded"],
+    "Type": ["Decompression", "Decompression definitions loaded"],
     "rsync": [
-                "rsync", "rsync",
-                ["-a", "--delete", "%(source)s", "%(destination)s"],
-                "RSYNC", None, {"rsync"},
-             ],
+        "rsync", "rsync",
+        ["-a", "--delete", "%(source)s", "%(destination)s"],
+        "RSYNC", None, {"rsync"},
+    ],
     "lbzip2": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "lbzip2",
-                    "%(decomp_opt)s", "-xpf", "%(source)s",
-                    "-C", "%(destination)s"
-                ],
-                "LBZIP2", ["tar.bz2", "bz2", "tbz2"], {"tar", "lbzip2"},
-              ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "lbzip2",
+            "%(decomp_opt)s", "-xpf", "%(source)s",
+            "-C", "%(destination)s"
+        ],
+        "LBZIP2", ["tar.bz2", "bz2", "tbz2"], {"tar", "lbzip2"},
+    ],
     "bzip2": [
-                "_common", "tar",
-                [
-                    "other_options", "-xpf", "%(source)s", "-C",
-                    "%(destination)s"
-                ],
-                "BZIP2", ["tar.bz2", "bz2", "tbz2"], {"tar", "bzip2"},
-             ],
+        "_common", "tar",
+        [
+            "other_options", "-xpf", "%(source)s", "-C",
+            "%(destination)s"
+        ],
+        "BZIP2", ["tar.bz2", "bz2", "tbz2"], {"tar", "bzip2"},
+    ],
     "lzip": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "lzip", "-cf",
-                    "%(filename)s", "-C", "%(basedir)s", "%(source)s"
-                ],
-                "LZIP", ["tar.lz", "tar.lzip"], {"tar", "lz", "lzip"},
-              ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "lzip", "-cf",
+            "%(filename)s", "-C", "%(basedir)s", "%(source)s"
+        ],
+        "LZIP", ["tar.lz", "tar.lzip"], {"tar", "lz", "lzip"},
+    ],
     "lzma": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "lzma", "-cf",
-                    "%(filename)s", "-C", "%(basedir)s", "%(source)s"
-                ],
-                "LZ", ["tar.lzma"], {"tar", "lzma"},
-              ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "lzma", "-cf",
+            "%(filename)s", "-C", "%(basedir)s", "%(source)s"
+        ],
+        "LZ", ["tar.lzma"], {"tar", "lzma"},
+    ],
     "lzop": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "lzop", "-cf",
-                    "%(filename)s", "-C", "%(basedir)s", "%(source)s"
-                ],
-                "LZOP", ["tar.lzop"], {"tar", "lzop"},
-              ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "lzop", "-cf",
+            "%(filename)s", "-C", "%(basedir)s", "%(source)s"
+        ],
+        "LZOP", ["tar.lzop"], {"tar", "lzop"},
+    ],
     "tar": [
-                "_common", "tar",
-                ["other_options", "-xpf", "%(source)s", "-C", "%(destination)s"],
-                "TAR", ["tar"], {"tar"},
-           ],
+        "_common", "tar",
+        ["other_options", "-xpf", "%(source)s", "-C", "%(destination)s"],
+        "TAR", ["tar"], {"tar"},
+    ],
     "xz": [
-            "_common", "tar",
-            ["other_options", "-xpf", "%(source)s", "-C", "%(destination)s"],
-            "XZ", ["tar.xz", "xz"], {"tar"},
-          ],
+        "_common", "tar",
+        ["other_options", "-xpf", "%(source)s", "-C", "%(destination)s"],
+        "XZ", ["tar.xz", "xz"], {"tar"},
+    ],
     "pixz": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "pixz", "%(decomp_opt)s",
-                    "-xpf", "%(source)s", "-C", "%(destination)s"
-                ],
-                "PIXZ", ["tar.xz", "tpxz", "xz"], {"tar", "pixz"},
-            ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "pixz", "%(decomp_opt)s",
+            "-xpf", "%(source)s", "-C", "%(destination)s"
+        ],
+        "PIXZ", ["tar.xz", "tpxz", "xz"], {"tar", "pixz"},
+    ],
     "pixz_x": [
-                "_common", "tar",
-                [
-                    "--xattrs", "--xattrs-include=security.capability",
-                    "--xattrs-include=user.pax.flags", "%(comp_prog)s", "pixz",
-                    "-xpf", "%(source)s", "-C", "%(destination)s"
-                ],
-                "PIXZ", ["tar.xz", "tpxz", "xz"], {"tar", "pixz"},
-              ],
+        "_common", "tar",
+        [
+            "--xattrs", "--xattrs-include=security.capability",
+            "--xattrs-include=user.pax.flags", "%(comp_prog)s", "pixz",
+            "-xpf", "%(source)s", "-C", "%(destination)s"
+        ],
+        "PIXZ", ["tar.xz", "tpxz", "xz"], {"tar", "pixz"},
+    ],
     "zstd": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "zstd", "%(decomp_opt)s",
-                    "-xpf", "%(source)s", "-C", "%(destination)s"
-                ],
-                "ZSTD", ["tar.zstd", "tar.zst", "tzst", "zst"], {"tar", "zstd"},
-            ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "zstd", "%(decomp_opt)s",
+            "-xpf", "%(source)s", "-C", "%(destination)s"
+        ],
+        "ZSTD", ["tar.zstd", "tar.zst", "tzst", "zst"], {"tar", "zstd"},
+    ],
     "pzstd": [
-                "_common", "tar",
-                [
-                    "other_options", "%(comp_prog)s", "pzstd", "%(decomp_opt)s",
-                    "-xpf", "%(source)s", "-C", "%(destination)s"
-                ],
-                "PZSTD", ["tar.pzstd", "tar.zstd", "tar.zst", "tzst", "zst"], {"tar", "pzstd"},
-            ],
+        "_common", "tar",
+        [
+            "other_options", "%(comp_prog)s", "pzstd", "%(decomp_opt)s",
+            "-xpf", "%(source)s", "-C", "%(destination)s"
+        ],
+        "PZSTD", ["tar.pzstd", "tar.zstd", "tar.zst", "tzst", "zst"], {"tar", "pzstd"},
+    ],
     "gzip": [
-                "_common", "tar",
-                [
-                    "other_options", "-xpzf", "%(source)s",
-                    "-C", "%(destination)s"
-                ],
-                "GZIP", ["tar.gz", "gz"], {"tar"},
-            ],
+        "_common", "tar",
+        [
+            "other_options", "-xpzf", "%(source)s",
+            "-C", "%(destination)s"
+        ],
+        "GZIP", ["tar.gz", "gz"], {"tar"},
+    ],
     "squashfs": [
-                    "_common", "unsquashfs",
-                    [
-                        "other_options", "-d", "%(destination)s",
-                        "%(basedir)s/%(source)s"
-                    ],
-                    "SQUASHFS", ["squashfs", "sfs"], {"unsquashfs"},
-                ],
-    }
-
+        "_common", "unsquashfs",
+        [
+            "other_options", "-d", "%(destination)s",
+            "%(basedir)s/%(source)s"
+        ],
+        "SQUASHFS", ["squashfs", "sfs"], {"unsquashfs"},
+    ],
+}
 
 DECOMPRESSOR_SEARCH_ORDER = [
     "zstd", "pzstd", "pixz", "lbzip2", "squashfs", "gzip", "xz", "bzip2", "tar"
@@ -351,75 +349,74 @@ DECOMPRESSOR_XATTR_SEARCH_ORDER = [
 This is the only edit point required then."""
 EXTENSION_SEPARATOR = '.'
 
-
 CONTENTS_DEFINITIONS = {
     "tar": [
-                "_common", "tar",
-                ["%(list_xattrs_opt)s", "-tvf", "%(source)s"],
-                "TAR", [".tar"], {"tar"},
-           ],
+        "_common", "tar",
+        ["%(list_xattrs_opt)s", "-tvf", "%(source)s"],
+        "TAR", [".tar"], {"tar"},
+    ],
     "gzip": [
-                "_common", "tar",
-                ["%(list_xattrs_opt)s", "-tvzf", "%(source)s"],
-                "GZIP", [".tgz", ".tar.gz", "gz"], {"tar"},
-            ],
+        "_common", "tar",
+        ["%(list_xattrs_opt)s", "-tvzf", "%(source)s"],
+        "GZIP", [".tgz", ".tar.gz", "gz"], {"tar"},
+    ],
     "lbzip2": [
-                "_common", "tar",
-                [
-                    "%(list_xattrs_opt)s", "%(comp_prog)s", "lbzip2",
-                    "%(decomp_opt)s", "-tvf", "%(source)s"
-                ],
-                "LBZIP2", [".tbz2", "bz2", ".tar.bz2"], {"tar", "lbzip2"},
-              ],
+        "_common", "tar",
+        [
+            "%(list_xattrs_opt)s", "%(comp_prog)s", "lbzip2",
+            "%(decomp_opt)s", "-tvf", "%(source)s"
+        ],
+        "LBZIP2", [".tbz2", "bz2", ".tar.bz2"], {"tar", "lbzip2"},
+    ],
     "bzip2": [
-                "_common", "tar",
-                ["%(list_xattrs_opt)s", "-tvf", "%(source)s"],
-                "BZIP2", [".tbz2", "bz2", ".tar.bz2"], {"tar", "bzip2"},
-             ],
+        "_common", "tar",
+        ["%(list_xattrs_opt)s", "-tvf", "%(source)s"],
+        "BZIP2", [".tbz2", "bz2", ".tar.bz2"], {"tar", "bzip2"},
+    ],
     "xz": [
-            "_common", "tar",
-            ["%(list_xattrs_opt)s", "-tvf", "%(source)s"],
-            "XZ", ["tar.xz", "xz"], {"tar"},
-          ],
+        "_common", "tar",
+        ["%(list_xattrs_opt)s", "-tvf", "%(source)s"],
+        "XZ", ["tar.xz", "xz"], {"tar"},
+    ],
     "pixz": [
-                "_common", "tar",
-                [
-                    "%(list_xattrs_opt)s", "%(comp_prog)s", "pixz",
-                    "%(decomp_opt)s", "-tvf", "%(source)s"
-                ],
-                "PIXZ", ["tar.xz", "xz"], {"tar", "pixz"},
-            ],
+        "_common", "tar",
+        [
+            "%(list_xattrs_opt)s", "%(comp_prog)s", "pixz",
+            "%(decomp_opt)s", "-tvf", "%(source)s"
+        ],
+        "PIXZ", ["tar.xz", "xz"], {"tar", "pixz"},
+    ],
     "zstd": [
-                "_common", "tar",
-                [
-                    "%(list_xattrs_opt)s", "%(comp_prog)s", "zstd",
-                    "%(decomp_opt)s", "-tvf", "%(source)s"
-                ],
-                "ZSTD", ["tar.zstd", "tar.zst", "zst"], {"tar", "zstd"},
-            ],
+        "_common", "tar",
+        [
+            "%(list_xattrs_opt)s", "%(comp_prog)s", "zstd",
+            "%(decomp_opt)s", "-tvf", "%(source)s"
+        ],
+        "ZSTD", ["tar.zstd", "tar.zst", "zst"], {"tar", "zstd"},
+    ],
     "pzstd": [
-                "_common", "tar",
-                [
-                    "%(list_xattrs_opt)s", "%(comp_prog)s", "pzstd",
-                    "%(decomp_opt)s", "-tvf", "%(source)s"
-                ],
-                "PZSTD", ["tar.pzstd", "tar.zstd", "tar.zst", "zst"], {"tar", "pzstd"},
-            ],
+        "_common", "tar",
+        [
+            "%(list_xattrs_opt)s", "%(comp_prog)s", "pzstd",
+            "%(decomp_opt)s", "-tvf", "%(source)s"
+        ],
+        "PZSTD", ["tar.pzstd", "tar.zstd", "tar.zst", "zst"], {"tar", "pzstd"},
+    ],
     "isoinfo_l": [
-                    "_common", "isoinfo",
-                    ["-l", "-i", "%(source)s"],
-                    "ISOINFO", ['.iso'], {"isoinfo"},
-                 ],
+        "_common", "isoinfo",
+        ["-l", "-i", "%(source)s"],
+        "ISOINFO", ['.iso'], {"isoinfo"},
+    ],
     "isoinfo_f": [
-                    "_common", "isoinfo",
-                    ["-f", "-i", "%(source)s"],
-                    "ISOINFO", ['.iso'], {"isoinfo"},
-                 ],
+        "_common", "isoinfo",
+        ["-f", "-i", "%(source)s"],
+        "ISOINFO", ['.iso'], {"isoinfo"},
+    ],
     "squashfs": [
-                    "_common", "unsquashfs",
-                    ["-ll", "%(source)s"],
-                    "SQUASHFS", ["squashfs", "sfs"], {"unsquashfs"},
-                ],
+        "_common", "unsquashfs",
+        ["-ll", "%(source)s"],
+        "SQUASHFS", ["squashfs", "sfs"], {"unsquashfs"},
+    ],
 }
 
 # isoinfo_f should be a last resort only

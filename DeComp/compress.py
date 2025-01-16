@@ -15,10 +15,10 @@ Maintained in full by:
 
 import os
 
-from DeComp.definitions import (DEFINITION_FIELDS, EXTENSION_SEPARATOR,
-    COMPRESSOR_PROGRAM_OPTIONS, DECOMPRESSOR_PROGRAM_OPTIONS,
-    DEFAULT_TAR)
 from DeComp import log
+from DeComp.definitions import (DEFINITION_FIELDS, EXTENSION_SEPARATOR,
+                                COMPRESSOR_PROGRAM_OPTIONS, DECOMPRESSOR_PROGRAM_OPTIONS,
+                                DEFAULT_TAR)
 from DeComp.utils import create_classes, subcmd, check_available
 
 
@@ -29,12 +29,11 @@ class CompressMap(object):
     # fields: list of ordered field names for the (de)compression functions
     fields = list(DEFINITION_FIELDS)
 
-
     def __init__(self, definitions=None, env=None, default_mode=None,
                  separator=EXTENSION_SEPARATOR, search_order=None, logger=None,
                  comp_prog=COMPRESSOR_PROGRAM_OPTIONS[DEFAULT_TAR],
                  decomp_opt=DECOMPRESSOR_PROGRAM_OPTIONS[DEFAULT_TAR]
-                ):
+                 ):
         """Class init
 
         :param definitions: dictionary of
@@ -64,7 +63,7 @@ class CompressMap(object):
             self.loaded_type = definitions.pop('Type')
         self.env = env or {}
         self.mode_error = self.loaded_type[0] + \
-            " Error: No mode was passed in or automatically detected"
+                          " Error: No mode was passed in or automatically detected"
         self._map = {}
         self.extension_separator = separator
         # set some defaults depending on what is being loaded
@@ -90,7 +89,6 @@ class CompressMap(object):
         for mode in self.search_order:
             binaries.update(self._map[mode].binaries)
         self.available = check_available(binaries)
-
 
     def _compress(self, infodict=None, filename='', source=None,
                   basedir='.', mode=None, auto_extension=False,
@@ -132,7 +130,6 @@ class CompressMap(object):
                           infodict['mode'])
         return self._run(infodict)
 
-
     def _extract(self, infodict=None, source=None, destination=None,
                  mode=None, other_options=None):
         """De-compression function
@@ -171,7 +168,6 @@ class CompressMap(object):
                           infodict['mode'])
         return self._run(infodict)
 
-
     def _run(self, infodict):
         """Internal function that runs the designated function
 
@@ -183,7 +179,7 @@ class CompressMap(object):
             self.logger.error("mode: %s is not supported in the current %s "
                               "definitions", infodict['mode'],
                               self.loaded_type[1]
-                             )
+                              )
             return False
         _func = self._map[infodict['mode']].func
         try:
@@ -202,14 +198,13 @@ class CompressMap(object):
             self.logger.error("FAILED to find or run function '%s'",
                               str(self._map[infodict['mode']].func))
             return False
-        #except Exception as e:
-            #msg = "Error performing %s %s, " % (mode, self.loaded_type[0]) + \
-                #"is the appropriate utility installed on your system?"
-            #print(msg)
-            #print("Exception:", e)
-            #return False
+        # except Exception as e:
+        # msg = "Error performing %s %s, " % (mode, self.loaded_type[0]) + \
+        # "is the appropriate utility installed on your system?"
+        # print(msg)
+        # print("Exception:", e)
+        # return False
         return success
-
 
     @staticmethod
     def get_extension(source):
@@ -220,7 +215,6 @@ class CompressMap(object):
         :returns: string: file type extension of the source file
         """
         return os.path.splitext(source)[1]
-
 
     def determine_mode(self, source):
         """Uses the decompressor_search_order spec parameter and
@@ -238,7 +232,7 @@ class CompressMap(object):
                               mode, self.search_order)
             for ext in self._map[mode].extensions:
                 if source.endswith(ext) and \
-                   self._map[mode].enabled(self.available):
+                        self._map[mode].enabled(self.available):
                     result = mode
                     break
             if result:
@@ -248,7 +242,6 @@ class CompressMap(object):
             self.logger.warning("COMPRESS: determine_mode(), failed to find a "
                                 "mode to use for: %s", source)
         return result
-
 
     def rsync(self, infodict=None, source=None, destination=None,
               mode=None):
@@ -270,7 +263,6 @@ class CompressMap(object):
             infodict = self.create_infodict(source, destination, mode=mode)
         return self._common(infodict)
 
-
     def _common(self, infodict):
         """Internal function.  Performs commonly supported
         compression or decompression commands.
@@ -282,7 +274,7 @@ class CompressMap(object):
         if not infodict['mode'] or not self.is_supported(infodict['mode']):
             self.logger.error("ERROR: CompressMap; %s mode: %s not correctly "
                               "set!", self.loaded_type[0], infodict['mode']
-                             )
+                              )
             return False
 
         # Avoid modifying the source dictionary
@@ -294,19 +286,18 @@ class CompressMap(object):
         # for compression, add the file extension if enabled
         if cmdinfo['auto-ext']:
             cmdinfo['filename'] += self.extension_separator + \
-                self.extension(cmdinfo["mode"])
+                                   self.extension(cmdinfo["mode"])
 
         cmdargs = self._sub_other_options(cmdlist.args, cmdinfo)
 
         # Do the string substitution
-        opts = ' '.join(cmdargs) %(cmdinfo)
+        opts = ' '.join(cmdargs) % (cmdinfo)
         args = ' '.join([cmdlist.cmd, opts])
 
         self.logger.debug("COMPRESS: _common(); command args: %s", args)
         # now run the (de)compressor command in a subprocess
         # return it's success/fail return value
         return subcmd(args, cmdlist.id, env=self.env)
-
 
     def create_infodict(self, source, destination=None, basedir=None,
                         filename='', mode=None, auto_extension=False,
@@ -347,8 +338,7 @@ class CompressMap(object):
             'other_options': other_options,
             'comp_prog': self.comp_prog,
             'decomp_opt': self.decomp_opt,
-            }
-
+        }
 
     def is_supported(self, mode):
         """Truth function to test the mode desired is supported
@@ -360,7 +350,6 @@ class CompressMap(object):
         """
         return mode in list(self._map)
 
-
     @property
     def available_modes(self):
         """Convienence function to return the available modes
@@ -368,7 +357,6 @@ class CompressMap(object):
         :returns: list of modes supported
         """
         return list(self._map)
-
 
     def extension(self, mode, all_extensions=False):
         """Returns the predetermined extension auto-ext added
@@ -387,7 +375,6 @@ class CompressMap(object):
                 return self._map[mode].extensions[0]
         return ''
 
-
     def _sqfs(self, infodict):
         """Internal function.  Performs commonly supported
         compression or decompression commands.
@@ -400,7 +387,7 @@ class CompressMap(object):
         if not infodict['mode'] or not self.is_supported(infodict['mode']):
             self.logger.error("ERROR: CompressMap; %s mode: %s not correctly "
                               "set!", self.loaded_type[0], infodict['mode']
-                             )
+                              )
             return False
 
         # Avoid modifying the source dictionary
@@ -412,7 +399,7 @@ class CompressMap(object):
         # for compression, add the file extension if enabled
         if cmdinfo['auto-ext']:
             cmdinfo['filename'] += self.extension_separator + \
-                self.extension(cmdinfo["mode"])
+                                   self.extension(cmdinfo["mode"])
 
         sqfs_opts = self._sub_other_options(cmdlist.args, cmdinfo)
         if not infodict['arch']:
@@ -424,7 +411,6 @@ class CompressMap(object):
         # now run the (de)compressor command in a subprocess
         # return it's success/fail return value
         return subcmd(args, cmdlist.id, env=self.env)
-
 
     def search_order_extensions(self, search_order):
         """Returns the ordered extension list determined by
@@ -456,7 +442,7 @@ class CompressMap(object):
                 else:
                     index = cmdargs.index('other_options')
                     cmdargs[index] = cmdinfo['other_options']
-            else: # assume it is an iterable
+            else:  # assume it is an iterable
                 if not cmdinfo['other_options']:
                     cmdargs.remove('other_options')
                 else:

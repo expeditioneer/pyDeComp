@@ -17,12 +17,12 @@ from __future__ import print_function
 import os
 from subprocess import Popen, PIPE
 
+from DeComp import log
 from DeComp.definitions import (CONTENTS_SEARCH_ORDER, DEFINITION_FIELDS,
                                 EXTENSION_SEPARATOR, COMPRESSOR_PROGRAM_OPTIONS,
                                 DECOMPRESSOR_PROGRAM_OPTIONS,
                                 LIST_XATTRS_OPTIONS
-                               )
-from DeComp import log
+                                )
 from DeComp.utils import create_classes, check_available
 
 
@@ -30,11 +30,9 @@ class ContentsMap(object):
     """Class to encompass all known commands to list
     the contents of an archive"""
 
-
     # fields: list of ordered field names for the contents functions
     # use ContentsMap.fields for the value legend
     fields = list(DEFINITION_FIELDS)
-
 
     def __init__(self, definitions=None, env=None, default_mode=None,
                  separator=EXTENSION_SEPARATOR, search_order=None, logger=None,
@@ -81,7 +79,6 @@ class ContentsMap(object):
             binaries.update(self._map[mode].binaries)
         self.available = check_available(binaries)
 
-
     def contents(self, source, destination, mode="auto", verbose=False):
         """Generate the contens list of the archive
 
@@ -106,7 +103,6 @@ class ContentsMap(object):
         return func(source, destination,
                     self._map[mode].cmd, self._map[mode].args, verbose)
 
-
     @staticmethod
     def get_extension(source):
         """Extracts the file extension string from the source file
@@ -116,7 +112,6 @@ class ContentsMap(object):
         :returns: string: file type extension of the source file
         """
         return os.path.splitext(source)[1]
-
 
     def determine_mode(self, source):
         """Uses the search_order spec parameter and compares the contents
@@ -134,7 +129,7 @@ class ContentsMap(object):
                               mode, self.search_order)
             for ext in self._map[mode].extensions:
                 if source.endswith(ext) and \
-                   self._map[mode].enabled(self.available):
+                        self._map[mode].enabled(self.available):
                     result = mode
                     break
             if result:
@@ -143,7 +138,6 @@ class ContentsMap(object):
             self.logger.debug("ContentsMap: determine_mode(), failed to "
                               "find a mode to use for: %s", source)
         return result
-
 
     def _common(self, source, destination, cmd, args, verbose):
         """General purpose controller to generate the contents listing
@@ -166,9 +160,9 @@ class ContentsMap(object):
                         'comp_prog': self.comp_prog,
                         'decomp_opt': self.decomp_opt,
                         'list_xattrs_opt': self.list_xattrs_opt,
-                       }
-                    ).split()
-                   )
+                        }
+                     ).split()
+                    )
         try:
             proc = Popen(_cmd, stdout=PIPE, stderr=PIPE)
             results = proc.communicate()
@@ -182,7 +176,6 @@ class ContentsMap(object):
         if verbose:
             self.logger.info(result)
         return result
-
 
     @staticmethod
     def _mountable(_source, _destination, _cmd, _args, _verbose):

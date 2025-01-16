@@ -77,6 +77,7 @@ def subcmd(command, exc="", env=None, debug=False):
         return False
     return True
 
+
 def check_available(commands):
     """Checks for the available binaries
 
