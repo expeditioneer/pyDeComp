@@ -22,7 +22,7 @@ warning = logger.warning
 def set_logger(logpath: str = '', level: int = None) -> None:
     """Logger initialization function
 
-    :param logpath: optional filepath to save log outpput to
+    :param logpath: optional filepath to save log output to
     :param level: logging level to set the file logger to
     """
     logger.setLevel(logging.INFO)
@@ -32,9 +32,8 @@ def set_logger(logpath: str = '', level: int = None) -> None:
     # add the handlers to logger
     if logpath:
         if not os.path.exists(logpath):
-            raise OSError(errno.ENOENT, 'Log file not found: %s' % logpath)
-        logname = os.path.join(logpath, '%s-%s.log'
-                               % ('DeComp', time.strftime('%Y%m%d-%H:%M')))
+            raise OSError(errno.ENOENT, f'Log file not found: {logpath}')
+        logname = os.path.join(logpath, f"DeComp-{time.strftime('%Y%m%d-%H:%M')}.log")
         file_handler = logging.FileHandler(logname)
         if level:
             file_handler.setLevel(level)

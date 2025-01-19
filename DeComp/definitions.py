@@ -32,7 +32,7 @@ The definition entries are to follow the the definition_types
 with the exception of the first entry "Type" which is a mode identifier
 for use in the class as a type ID and printable output string.
 
-Definiton entries are composed of the following:
+Definition entries are composed of the following:
     access key: list of definition fields values.
     eg:
     "tar": [             <== access key: list of DEFINITION_FIELDS

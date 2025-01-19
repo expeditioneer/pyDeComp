@@ -1,12 +1,11 @@
 """
 compress.py
 
-Utility class to hold and handle all possible compression
-and de-compression of files using native linux utilities.
-Including rsync transfers.
+Utility class to hold and handle all possible compression and de-compression of files using native
+linux utilities. Including rsync transfers.
 
-If you have other compression or de-compression defintions,
-please send them along for inclusion in the main repo.
+If you have other compression or de-compression definitions, please send them along for inclusion
+in the main repo.
 
 Maintained in full by:
     Brian Dolbec <dolsen@gentoo.org>
@@ -22,15 +21,15 @@ from DeComp.definitions import (DEFINITION_FIELDS, EXTENSION_SEPARATOR,
 from DeComp.utils import create_classes, subcmd, check_available
 
 
-class CompressMap(object):
-    """Class for handling
-    compression & decompression of archives"""
+class CompressMap:
+    """Class for handling compression & decompression of archives"""
 
     # fields: list of ordered field names for the (de)compression functions
     fields = list(DEFINITION_FIELDS)
 
     def __init__(self, definitions=None, env: dict = None, default_mode: str = None,
-                 separator: str = EXTENSION_SEPARATOR, search_order: list[str] = None, logger: logging.Logger = None,
+                 separator: str = EXTENSION_SEPARATOR, search_order: list[str] = None,
+                 logger: logging.Logger = None,
                  comp_prog: str = COMPRESSOR_PROGRAM_OPTIONS[DEFAULT_TAR],
                  decomp_opt: str = DECOMPRESSOR_PROGRAM_OPTIONS[DEFAULT_TAR]
                  ):
@@ -45,7 +44,7 @@ class CompressMap(object):
         :param search_order: optional mode search order
         :param logger: optional logging module instance,
                        default: pyDecomp logging namespace instance
-        :param comp_prog: the tar option string to use for the commpressor program
+        :param comp_prog: the tar option string to use for the compressor program
                           bsd's tar is different that linux's tar default: '-I'
         :param decomp_opt: external decompressor module option
         """
@@ -319,8 +318,8 @@ class CompressMap(object):
         return list(self._map)
 
     def extension(self, mode: str, all_extensions: bool = False) -> str:
-        """Returns the predetermined extension auto-ext added
-        to the filename for compression.
+        """
+        Returns the predetermined extension auto-ext added to the filename for compression
 
         :param mode: the compression mode
         :param all_extensions: optional, default: False
@@ -333,8 +332,8 @@ class CompressMap(object):
         return ''
 
     def _sqfs(self, infodict: dict) -> bool:
-        """Internal function. Performs commonly supported
-        compression or decompression commands.
+        """
+        Internal function. Performs commonly supported compression or decompression commands
 
         :param infodict: dict as returned by this class's create_infodict()
         """

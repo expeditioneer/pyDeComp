@@ -27,7 +27,7 @@ from DeComp.definitions import (CONTENTS_SEARCH_ORDER, DEFINITION_FIELDS,
 from DeComp.utils import create_classes, check_available
 
 
-class ContentsMap(object):
+class ContentsMap:
     """Class to encompass all known commands to list
     the contents of an archive"""
 
@@ -36,7 +36,8 @@ class ContentsMap(object):
     fields = list(DEFINITION_FIELDS)
 
     def __init__(self, definitions: dict = None, env: dict = None, default_mode: str = None,
-                 separator: str = EXTENSION_SEPARATOR, search_order: list[str] = None, logger: logging.Logger | None = None,
+                 separator: str = EXTENSION_SEPARATOR, search_order: list[str] = None,
+                 logger: logging.Logger | None = None,
                  comp_prog=COMPRESSOR_PROGRAM_OPTIONS['linux'],
                  decomp_opt=DECOMPRESSOR_PROGRAM_OPTIONS['linux'],
                  list_xattrs_opt=LIST_XATTRS_OPTIONS['linux']):
@@ -74,8 +75,9 @@ class ContentsMap(object):
             binaries.update(self._map[mode].binaries)
         self.available = check_available(binaries)
 
-    def contents(self, source: str, destination: str, mode: str = "auto", verbose: bool = False) -> str:
-        """Generate the contens list of the archive
+    def contents(self, source: str, destination: str, mode: str = "auto",
+                 verbose: bool = False) -> str:
+        """Generate the contents list of the archive
 
         :param source: optional path to the directory
         :param destination: optional path to the directory
@@ -88,7 +90,7 @@ class ContentsMap(object):
         # see if it is an internal function name (string)
         # or an external function pointer
         if isinstance(self._map[mode].func, str):
-            func = getattr(self, '%s' % self._map[mode].func)
+            func = getattr(self, f"{self._map[mode].func}")
         else:
             func = self._map[mode].func
         return func(source, destination,
