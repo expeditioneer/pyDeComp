@@ -19,7 +19,7 @@ info = logger.info
 warning = logger.warning
 
 
-def set_logger(logpath: str = '', level: int = None) -> None:
+def set_logger(logpath: str = '', level: int = logging.DEBUG) -> None:
     """Logger initialization function
 
     :param logpath: optional filepath to save log output to
@@ -35,10 +35,7 @@ def set_logger(logpath: str = '', level: int = None) -> None:
             raise OSError(errno.ENOENT, f'Log file not found: {logpath}')
         logname = os.path.join(logpath, f"DeComp-{time.strftime('%Y%m%d-%H:%M')}.log")
         file_handler = logging.FileHandler(logname)
-        if level:
-            file_handler.setLevel(level)
-        else:
-            file_handler.setLevel(logging.DEBUG)
+        file_handler.setLevel(level)
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
     # create console handler with a higher log level
