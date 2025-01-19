@@ -150,11 +150,11 @@ class ContentsMap:
                      ).split()
                     )
         try:
-            proc = Popen(_cmd, stdout=PIPE, stderr=PIPE)
-            results = proc.communicate()
-            stdout = results[0].decode('UTF-8')
-            stderr = results[1].decode('UTF-8')
-            result = "\n".join([stdout, stderr])
+            with Popen(_cmd, stdout=PIPE, stderr=PIPE) as proc:
+                results = proc.communicate()
+                stdout = results[0].decode('UTF-8')
+                stderr = results[1].decode('UTF-8')
+                result = "\n".join([stdout, stderr])
         except OSError as error:
             result = ''
             self.logger.error("ContentsMap: _common(); OSError: %s, %s",
