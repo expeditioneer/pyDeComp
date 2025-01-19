@@ -12,8 +12,8 @@ Maintained in full by:
     Brian Dolbec <dolsen@gentoo.org>
 
 """
-
 import os
+import platform
 
 from collections import OrderedDict
 
@@ -86,7 +86,7 @@ LIST_XATTRS_OPTIONS = {"linux": "--xattrs",
                        "bsd": "",
                        }
 
-if os.uname()[0] in ["Linux", "linux"]:
+if platform.system() == 'Linux':
     DEFAULT_TAR = 'linux'
 else:
     DEFAULT_TAR = 'bsd'
@@ -345,9 +345,8 @@ DECOMPRESSOR_XATTR_SEARCH_ORDER = [
     "zstd", "pzstd", "pixz_x", "lbzip2_x", "squashfs", "gzip_x", "xz_x", "bzip2_x", "tar_x"
 ]
 
-"""Configure this here in case it is ever changed.
-This is the only edit point required then."""
-EXTENSION_SEPARATOR = '.'
+"""Configure this here in case it is ever changed. This is the only edit point required then."""
+EXTENSION_SEPARATOR = os.extsep
 
 CONTENTS_DEFINITIONS = {
     "tar": [
