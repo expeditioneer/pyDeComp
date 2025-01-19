@@ -4,9 +4,11 @@ Utility functions
 
 from __future__ import print_function
 
+import os
+import shutil
 import sys
 from collections import namedtuple
-from subprocess import Popen, PIPE
+from subprocess import Popen
 
 from DeComp import log
 
@@ -69,27 +71,18 @@ def subcmd(command: str, exc: str = "", env: dict = None, debug: bool | None = F
     return True
 
 
-def check_available(commands: list) -> set[str]:
+def check_available(commands: list) -> set[str | None]:
     """Checks for the available binaries
 
     :param commands: the binaries to check for their existence
     :returns: set of the installed binaries available
     """
-    cmd = ["which"]
-    cmd.extend(commands)
-    proc = None
-    try:
-        proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
-        results = proc.communicate()
-        stdout = results[0].decode('UTF-8')
-    except OSError as error:
-        stdout = u''
-        log.error("utils: check_available(); OSError: %s, %s",
-                  str(error), ' '.join(cmd))
-    finally:
-        if proc:
-            for pipe in [proc.stdout, proc.stderr]:
-                if pipe:
-                    pipe.close()
-    available = set([x.rsplit('/', 1)[1] for x in stdout.split('\n') if x])
-    return available
+
+    available_commands: set = set()
+
+    for command in commands:
+        executable_path = shutil.which(command)
+        if executable_path and os.access(executable_path, os.X_OK):
+            available_commands.add(command)
+
+    return available_commands
